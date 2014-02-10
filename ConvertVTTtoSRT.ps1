@@ -39,7 +39,7 @@ foreach($file in $files)
 		elseif(($line|Select-String -pattern '\d*:\d*:\d*' | Select-Object  -ExpandProperty  Matches ) -ne $null )
 		{
 			if($i -gt  0){
-				$r=$sb.AppendLine()
+				$r=$sb.AppendLine([System.Environment]::NewLine)
 			}
 		
 
@@ -82,6 +82,3 @@ foreach($file in $files)
 
 
 Write-Host "Done."
-
-	
-
