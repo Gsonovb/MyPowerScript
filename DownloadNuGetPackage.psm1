@@ -13,7 +13,7 @@
        DownloadNuGetPackage -PackageName "HtmlAgilityPack" -NetVersion Net40 -WorkingDirectory "g:\temp" -Force
 
     .NOTES
-       Copyright  Guanyc  All rights reserved.
+       Copyright  Guanyc All rights reserved.
     .FUNCTIONALITY
        检查 Nuget 文件是否存在，并使用NuGet.exe 获取 NuGet Gallery 组件包，并返回要加载的类库文件路径。
 
@@ -35,8 +35,8 @@
 
     #>
 
-    [CmdletBinding(DefaultParameterSetName="BASE")] #,
-    #HelpURI="http://gallery.technet.microsoft.com/scriptcenter/Convert-WindowsImageps1-0fe23a8f")]
+    [CmdletBinding(DefaultParameterSetName="BASE",
+    HelpURI="https://github.com/Gsonovb/MyPowerScript")]
 
     Param
     (

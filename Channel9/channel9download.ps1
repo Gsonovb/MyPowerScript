@@ -1,3 +1,6 @@
+#https://github.com/Gsonovb/MyPowerScript
+
+
 Add-Type -AssemblyName System.Web
 
 $langs = ("en","zh-cn")
@@ -282,18 +285,18 @@ foreach ($item in $feeds){
     {        
         write-progress -activity "Downloading $saveFileName" -status "$pagepercent% ($progress / $entries) complete" -percentcomplete $pagepercent    -Id 1   
         &{#TRY
-
-            $webClient.DownloadFileAsync($link, $saveFileName)
-
+            
+            if ($overwrite -or (-not (Test-Path -Path $saveFileNmae))){
+                $webClient.DownloadFileAsync($link, $saveFileName)
+            }
 
             do 
             {
-                 #$webClient.IsBusy
-                sleep -Seconds 5
+                        sleep -Seconds 5
             } while ( $webClient.IsBusy)
             
+            Write-Progress -Activity "Done" -Completed -Id 1
             
-            #getfile -url  $link  -filename $saveFileName
         }
         trap [Exception]{
             write-host
@@ -304,6 +307,7 @@ foreach ($item in $feeds){
     $pagepercent = [Math]::floor((++$progress)/$entries*100) 
 }
 
-Write-Progress -Activity "Done" -Completed -Id 1
 
+
+ .\ConvertVTTtoSRT.ps1 -Path $dir 
 
