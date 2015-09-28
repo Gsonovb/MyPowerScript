@@ -17,7 +17,6 @@
 
 .PARAMETER Force
      指示是否覆盖已有字幕文件
-
 #>
 
 [CmdletBinding(DefaultParameterSetName='PS', 
@@ -29,7 +28,6 @@
 [OutputType([String])]
 Param
 (
-    
     [Parameter(ParameterSetName="PS")]
     [Alias("WorkDir")]
     [ValidateNotNullOrEmpty()]
@@ -41,13 +39,10 @@ Param
     $Force = $False
 )
 Begin
-{
-}
+{}
 Process
 {
-
     Write-Host "Find VTT Files in $Path"
-
     $files = Get-ChildItem -Path  $Path  -Filter "*.vtt" -Recurse
 
     $progress = 0 
@@ -58,65 +53,46 @@ Process
 
     $sb = New-Object -TypeName "System.Text.StringBuilder" 
 
-
     foreach($file in $files)
     {
-	     
         write-progress -activity "Converting ""$file""" -status "$pagepercent% ($progress / $entries) complete" -percentcomplete $pagepercent       
-	
         $saveFileName = [System.IO.Path]::ChangeExtension($file.FullName ,".srt")
 
         if ( -not ($Force) -and ( Test-Path -Path $saveFileName ) ){ 
             $pagepercent = [Math]::floor((++$progress)/$entries*100) 
             Continue;
         }
-        
-	    $r=$sb.Clear()
 
-	    $lines=Get-Content $file.Fullname -Encoding UTF8
-	
-	    $i= 0
-	
+        $r=$sb.Clear()
+        $lines=Get-Content $file.Fullname -Encoding UTF8
+        $i= 0
 
         for ($index = 0; $index -lt $lines.Count ; $index++){
-		    $line=$lines[$index]
-		
-		
-		    if([System.String]::IsNullOrEmpty($line))
-		    {
-		
-		    }
-		    elseif($line.StartsWith("WEBVTT",[System.StringComparison]::CurrentCultureIgnoreCase))
-		    {
-		
-		    }
-		    elseif(($line|Select-String -pattern '\d*:\d*:\d*' | Select-Object  -ExpandProperty  Matches ) -ne $null )
-		    {
-			    if($i -gt  0){
-				    $r=$sb.AppendLine([System.Environment]::NewLine)
-			    }
-		
+            $line=$lines[$index]
+        
+            if([System.String]::IsNullOrEmpty($line)){}
+            elseif($line.StartsWith("WEBVTT",[System.StringComparison]::CurrentCultureIgnoreCase)){}
+            elseif(($line|Select-String -pattern '\d*:\d*:\d*' | Select-Object  -ExpandProperty  Matches ) -ne $null )
+            {
+                if($i -gt  0){
+                    $r=$sb.AppendLine([System.Environment]::NewLine)
+                }
 
-			    $r=$sb.AppendLine(++$i)
-			    $r=$sb.AppendLine($line.Replace(".",","))
-			
-		    }
-		    else
-		    {
-			    if($line.StartsWith(">>" ,[System.StringComparison]::CurrentCultureIgnoreCase)){
-				    $line=$line.Replace(">>","")
-			    }
-			    $r=$sb.Append(" ")
-			    $r=$sb.Append($line)		
-		    }
-		
-	    }
-		
-	    
-	
+                $r=$sb.AppendLine(++$i)
+                $r=$sb.AppendLine($line.Replace(".",","))
+            }
+            else
+            {
+                if($line.StartsWith(">>" ,[System.StringComparison]::CurrentCultureIgnoreCase)){
+                    $line=$line.Replace(">>","")
+                }
+                $r=$sb.Append(" ")
+                $r=$sb.Append($line)        
+            }
+        }
 
         &{#TRY
-	        Write-Host "Converting ""$file"""
+            Write-Host "Converting ""$file"""
             Out-File -InputObject $sb.ToString() -FilePath $saveFileName -Encoding UTF8
         }
         trap [Exception]{
@@ -124,15 +100,10 @@ Process
              write-host ("Unable to Convert " + $file.FullName )
              continue; 
         }
-
         $pagepercent = [Math]::floor((++$progress)/$entries*100) 
-				
     }
 
-
     Write-Host "Done."
-
 }
 End
-{
-}
+{}

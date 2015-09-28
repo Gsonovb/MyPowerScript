@@ -72,12 +72,12 @@ function RemoveInvalidChars ($filename)
     
     foreach($item in [System.IO.Path]::GetInvalidFileNameChars())
     {
-	    $filename=$filename.Replace($item ,"_")
+        $filename=$filename.Replace($item ,"_")
     }
 
     foreach($item in [System.IO.Path]::GetInvalidPathChars())
     {
-	    $filename=$filename.Replace($item ,"_")
+        $filename=$filename.Replace($item ,"_")
     }
     
     return $filename
@@ -189,9 +189,9 @@ foreach($lf in $linkfeeds){
 
     
     $name=$title.Substring($title.LastIndexOf(":")+1).Trim()
-		    
+            
     $name = RemoveInvalidChars($name)
-		
+        
 
     $links =  $htmldoc.DocumentNode.SelectNodes('//*[@id="video-download"]/ul/li/div/a') |Select-Object -ExpandProperty Attributes | Where-Object -Property Name -EQ "href" | Select-Object -ExpandProperty Value 
 
